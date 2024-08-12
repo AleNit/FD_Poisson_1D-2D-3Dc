@@ -36,6 +36,6 @@ end
 A=sparse(I,J,VA,ndof,ndof);
 
 % assign fictitious boundary conditions, just to add to include elements in the sparse format
-[A,~]=bcs1DR(A,ones(ndof,1),gr,ones(ndof,1),[1,0,0],[1,0,0]);
+[A,~]=bcs1DR(A,ones(ndof,1),gr,ones(ndof,1),[1,0,0]);
 
 end

@@ -2,7 +2,7 @@
 % solve 3D Poisson problem on cylindrical coordinates
 % by centered finite differences on a cell-centered, non-uniform grid; 
 % b.c.s are prescribed by a ghost cell method with generalized {\alpha,\beta,\gamma} coefficients; 
-% Boundary conditions: r --> (Neumann-Dirichelet),  z --> (periodic)
+% Boundary conditions: r --> (inner-Dirichelet),  z --> (periodic)
 % Solve by DFT in the theta and z directions
 
 % A. Nitti, Polytechnic University of Bari (2024)
@@ -15,17 +15,16 @@ kf=1;
 
 
 %% input parameters
-Lz=2;
-Lr=0.5;
-nz=100;
-nr=30;
-nt=128;
-
-pbz=true(1);                                                               % periodic z boundary
+Lz=2;                                                                       % axial domain length
+Lr=0.5;                                                                     % radial domain length
+nz=101;                                                                     % nodes in the axial direction
+nr=31;                                                                      % nodes in the radial direction
+nt=64;                                                                      % nodes in the tangential direction
 refr='tanh-e';                                                              % grid law in dir. z
-rhs=@(r,t,z) -(pi.*sin(pi.*z).*(2.*sin((pi.*r)./2) + 5*pi.*r.*cos((pi.*r)./2)))./(4.*r);                                               % right-hand-side function
-valr0=@(t,z) cat(3,zeros(nt-1,nz-1), ones(nt-1,nz-1), z.*0);                % values at r=0 boundary
-valr1=@(t,z) cat(3,ones(nt-1,nz-1), zeros(nt-1,nz-1), sin(pi.*z).*sin(pi/4));                % values at r=Lr boundary
+ua=@(r,t,z) sin(pi.*z).*cos(pi/2.*r);                                       % analytical solution
+rhs=@(r,t,z) -(pi.*sin(pi.*z).*(2.*sin((pi.*r)./2) + ...
+             5*pi.*r.*cos((pi.*r)./2)))./(4.*r);                            % right-hand-side function
+valr1=@(t,z) cat(3,ones(nt-1,nz-1), zeros(nt-1,nz-1), sin(pi.*z).*sin(pi/4));  % values at r=Lr boundary
 
 
 %% preliminary operations
@@ -47,7 +46,7 @@ ndof=nr-1;
 kf=plotgrid(gr.xn,gt.xn,gz.xn,Lr,Lz,kf);
 
 % DFT of rhs and boundary conditions
-[rhshat,valr0t,valr1t]=ftransf2(gr,gt,gz,rhs,valr0,valr1);
+[rhshat,valr1t]=ftransf2(gr,gt,gz,rhs,valr1);
 
 % assemble coefficient matrix
 A=getCoeffMatR(gr,ndof);
@@ -67,7 +66,7 @@ for k=1:nz-1
         b=squeeze(rhshat(:,j,k));
     
         % assign boundary conditions
-        [AA,b]=bcs1DR(A,b,gr,b,valr0t(j,k,:),valr1t(j,k,:));
+        [AA,b]=bcs1DR(A,b,gr,b,valr1t(j,k,:));
         
         % augment coefficient matrix with modified wavenumber
         AA = AA + mwt(j).*Ier + mwz(k).*Iez;
@@ -77,9 +76,7 @@ for k=1:nz-1
     
         % local to global solution array
         us(:,j,k)=sol;
-    
-        % disp(['solved system at j=',num2str(j),', k=',num2str(k)])
-    
+        
     end
 end
 
@@ -89,8 +86,6 @@ u=real( (ifft(ifft(us,nz-1,3),nt-1,2)) );
 toc
 
 %% compute error norm and plot results
-ua=@(r,t,z) sin(pi.*z).*cos(pi/2.*r);     % analytical solution
-
 figure(kf); kf=kf+1;
 set(gcf,'Position',[100,100,1000,450])
 tiledlayout(1,2);
