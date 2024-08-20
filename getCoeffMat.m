@@ -1,10 +1,9 @@
 
 % assemble coefficient matrix in sparse format
 
-function [A,b]=getCoeffMat(gr,gt,gz,ndof,bb,cA,cBr,cBt,cBz)
+function [A,b]=getCoeffMat(gr,gz,ndof,pbz)
 
 nr=length(gr.xn);
-nt=length(gt.xn);
 nz=length(gz.xn);
 
 % store coefficients of the pentadiagonal matrix into sparse arrays I,J,VA
