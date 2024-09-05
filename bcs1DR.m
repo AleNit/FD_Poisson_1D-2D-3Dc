@@ -20,8 +20,13 @@ b(i)        =  rhs(i);
 % final boundary
 i=nx-1;
 ip=i+1;
-c3=(-2*vale(2)+vale(1)*gr.dxc(i+1))/(-2*vale(2)-vale(1)*gr.dxc(i+1));
-c4=-2*vale(3)*gr.dxc(i+1)/(-2*vale(2)-vale(1)*gr.dxc(i+1));
+den=(gr.dxc(nx)-gr.dxn(nx-1)/2)*gr.dxn(nx-1)/2*gr.dxc(nx);
+dp=(gr.dxn(nx-1)/2)^2/den;
+dm=(gr.dxc(nx)-gr.dxn(nx-1)/2)^2/den;
+dd=( (gr.dxc(nx)-gr.dxn(nx-1)/2)^2 - (gr.dxn(nx-1)/2)^2 )/den;
+c3=( vale(2)*dm + ( gr.dxn(nx-1)/2/gr.dxc(nx)-1 )*( vale(1)+vale(2)*dd ) )/ ...
+( vale(2)*dp + gr.dxn(nx-1)/2/gr.dxc(nx)*( vale(1)+vale(2)*dd ) );
+c4= vale(3) / ( vale(2)*dp + gr.dxn(nx-1)/2/gr.dxc(nx)*( vale(1)+vale(2)*dd ) );
 A(i, i)     =  (c3-1)*gr.xn(ip)/(gr.xc(ip)*gr.dxn(i)*gr.dxc(ip)) - ...
                gr.xn(i)/(gr.xc(ip)*gr.dxn(i)*gr.dxc(i));
 A(i, i-1)   =  gr.xn(i)/(gr.xc(ip)*gr.dxn(i)*gr.dxc(i));

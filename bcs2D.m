@@ -13,21 +13,41 @@ end
 
 
 %% compute boundary arrays
-i=1;            
-c1we=(2.*valw(:,2)+valw(:,1).*gx.dxc(i))./(2.*valw(:,2)-valw(:,1).*gx.dxc(i));
-c2we=-2.*valw(:,3).*gx.dxc(i)./(2.*valw(:,2)-valw(:,1).*gx.dxc(i));
+i=1;
+den=(gx.dxc(1)-gx.dxn(1)/2)*gx.dxn(1)/2*gx.dxc(1);
+dp=(gx.dxc(1)-gx.dxn(1)/2)^2/den;
+dm=(gx.dxn(1)/2)^2/den;
+dd=( (gx.dxn(1)/2)^2 - (gx.dxc(1)-gx.dxn(1)/2)^2 )/den;
+c1we=( valw(:,2)*dp + (2*gx.dxc(1)-gx.dxn(1))/2/gx.dxc(1)*( valw(:,1)+valw(:,2)*dd ) )/ ...
+     ( valw(:,2)*dm + ( (2*gx.dxc(1)-gx.dxn(1))/2/gx.dxc(1)-1 )*( valw(:,1)+valw(:,2)*dd ) );
+c2we= - valw(:,3) / ( valw(:,2)*dm + ( (2*gx.dxc(1)-gx.dxn(1))/2/gx.dxc(1)-1 )*( valw(:,1)+valw(:,2)*dd ) );
+
 i=nx-1;
-c3we=(-2.*vale(:,2)+vale(:,1).*gx.dxc(i+1))./(-2.*vale(:,2)-vale(:,1).*gx.dxc(i+1));
-c4we=-2.*vale(:,3)*gx.dxc(i+1)./(-2.*vale(:,2)-vale(:,1).*gx.dxc(i+1));
+den=(gx.dxc(nx)-gx.dxn(nx-1)/2)*gx.dxn(nx-1)/2*gx.dxc(nx);
+dp=(gx.dxn(nx-1)/2)^2/den;
+dm=(gx.dxc(nx)-gx.dxn(nx-1)/2)^2/den;
+dd=( (gx.dxc(nx)-gx.dxn(nx-1)/2)^2 - (gx.dxn(nx-1)/2)^2 )/den;
+c3we=( vale(:,2)*dm + ( gx.dxn(nx-1)/2/gx.dxc(nx)-1 )*( vale(1)+vale(:,2)*dd ) )/ ...
+     ( vale(:,2)*dp + gx.dxn(nx-1)/2/gx.dxc(nx)*( vale(:,1)+vale(:,2)*dd ) );
+c4we= vale(:,3) / ( vale(:,2)*dp + gx.dxn(nx-1)/2/gx.dxc(nx)*( vale(:,1)+vale(2)*dd ) );
 
 j=1;
-c1sn=(2.*vals(:,2)+vals(:,1).*gy.dxc(j))./(2.*vals(:,2)-vals(:,1)*gy.dxc(j));
-c2sn=-2.*vals(:,3).*gy.dxc(j)./(2.*vals(:,2)-vals(:,1).*gy.dxc(j));    
+den=(gy.dxc(1)-gy.dxn(1)/2)*gy.dxn(1)/2*gy.dxc(1);
+dp=(gy.dxc(1)-gy.dxn(1)/2)^2/den;
+dm=(gy.dxn(1)/2)^2/den;
+dd=( (gy.dxn(1)/2)^2 - (gy.dxc(1)-gy.dxn(1)/2)^2 )/den;
+c1sn=( vals(:,2)*dp + (2*gy.dxc(1)-gy.dxn(1))/2/gy.dxc(1)*( vals(:,1)+vals(:,2)*dd ) )/ ...
+     ( vals(:,2)*dm + ( (2*gy.dxc(1)-gy.dxn(1))/2/gy.dxc(1)-1 )*( vals(:,1)+vals(:,2)*dd ) );
+c2sn= - vals(:,3) / ( vals(:,2)*dm + ( (2*gy.dxc(1)-gy.dxn(1))/2/gy.dxc(1)-1 )*( vals(:,1)+vals(:,2)*dd ) );
+
 j=ny-1;
-c3sn=(2.*valn(:,2)+valn(:,1).*gy.dxc(j))./(2.*valn(:,2)-valn(:,1)*gy.dxc(j));
-c4sn=-2.*valn(:,3).*gy.dxc(j)./(2.*valn(:,2)-valn(:,1).*gy.dxc(j));    
-
-
+den=(gy.dxc(ny)-gy.dxn(ny-1)/2)*gy.dxn(ny-1)/2*gy.dxc(ny);
+dp=(gy.dxn(ny-1)/2)^2/den;
+dm=(gy.dxc(ny)-gy.dxn(ny-1)/2)^2/den;
+dd=( (gy.dxc(ny)-gy.dxn(ny-1)/2)^2 - (gy.dxn(ny-1)/2)^2 )/den;
+c3sn=( valn(:,2)*dm + ( gy.dxn(ny-1)/2/gy.dxc(ny)-1 )*( valn(:,1)+valn(:,2)*dd ) )/ ...
+     ( valn(:,2)*dp + gy.dxn(ny-1)/2/gy.dxc(ny)*( valn(:,1)+valn(:,2)*dd ) );
+c4sn= valn(:,3) / ( valn(:,2)*dp + gy.dxn(ny-1)/2/gy.dxc(ny)*( valn(:,1)+valn(:,2)*dd ) );
 
 
 
