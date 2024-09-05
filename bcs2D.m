@@ -27,9 +27,9 @@ den=(gx.dxc(nx)-gx.dxn(nx-1)/2)*gx.dxn(nx-1)/2*gx.dxc(nx);
 dp=(gx.dxn(nx-1)/2)^2/den;
 dm=(gx.dxc(nx)-gx.dxn(nx-1)/2)^2/den;
 dd=( (gx.dxc(nx)-gx.dxn(nx-1)/2)^2 - (gx.dxn(nx-1)/2)^2 )/den;
-c3we=( vale(:,2)*dm + ( gx.dxn(nx-1)/2/gx.dxc(nx)-1 )*( vale(1)+vale(:,2)*dd ) )/ ...
+c3we=( vale(:,2)*dm + ( gx.dxn(nx-1)/2/gx.dxc(nx)-1 )*( vale(:,1)+vale(:,2)*dd ) )/ ...
      ( vale(:,2)*dp + gx.dxn(nx-1)/2/gx.dxc(nx)*( vale(:,1)+vale(:,2)*dd ) );
-c4we= vale(:,3) / ( vale(:,2)*dp + gx.dxn(nx-1)/2/gx.dxc(nx)*( vale(:,1)+vale(2)*dd ) );
+c4we= vale(:,3) / ( vale(:,2)*dp + gx.dxn(nx-1)/2/gx.dxc(nx)*( vale(:,1)+vale(:,2)*dd ) );
 
 j=1;
 den=(gy.dxc(1)-gy.dxn(1)/2)*gy.dxn(1)/2*gy.dxc(1);
